@@ -1,0 +1,38 @@
+version: '3'
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./php:/var/www/html
+      - ./apache-conf:/etc/apache2/sites-enabled
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.1.37
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db-data:/var/lib/mysql
+      - ./mariadb-conf:/etc/mysql/conf.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      # Eliminamos PMA_USER y PMA_PASSWORD para evitar el inicio de sesión automático
+    volumes:
+      - ./phpmyadmin-conf:/etc/phpmyadmin/config.user.inc.php
+    depends_on:
+      - db
