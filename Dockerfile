@@ -1,9 +1,7 @@
-FROM php:7.3.1-apache
-RUN docker-php-ext-install pdo pdo_mysql
+FROM php:8.4-apache
 
-# Actualizar los repositorios para usar el archivo de Debian
-RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list \
-    && echo "deb http://archive.debian.org/debian-security stretch/updates main" >> /etc/apt/sources.list
+# Instalar extensiones de PHP
+RUN docker-php-ext-install pdo pdo_mysql
 
 # Instalar herramientas necesarias y Composer
 RUN apt-get update && apt-get install -y wget nano \
@@ -14,7 +12,10 @@ RUN apt-get update && apt-get install -y wget nano \
 # Habilitar el módulo rewrite
 RUN a2enmod rewrite
 
-# Copiar el proyecto y restaurar las dependencias
+# Copiar entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 WORKDIR /var/www/html/digifolio
-COPY php/digifolio /var/www/html/digifolio
-RUN composer install
+
+ENTRYPOINT ["/entrypoint.sh"]

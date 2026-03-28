@@ -1,4 +1,3 @@
 #!/bin/sh
-if [ -f /etc/mysql/conf.d/custom.cnf ]; then
-    chmod 644 /etc/mysql/conf.d/custom.cnf
-fi
+# Este script está preparado para ajustar permisos de archivos de configuración en /etc/mysql/conf.d/ si es necesario
+# Actualmente no se usa, pero se mantiene para futuras configuraciones

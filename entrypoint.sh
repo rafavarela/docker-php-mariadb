@@ -1,5 +1,10 @@
-#!/bin/sh
-if [ -f /etc/mysql/conf.d/custom.cnf ]; then
-    chmod 644 /etc/mysql/conf.d/custom.cnf
+#!/bin/bash
+
+cd /var/www/html/digifolio
+
+if [ ! -d "vendor" ]; then
+  echo "Instalando dependencias con Composer..."
+  composer install
 fi
-exec "$@"
+
+apache2-foreground
