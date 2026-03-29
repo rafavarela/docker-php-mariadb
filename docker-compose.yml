@@ -13,29 +13,29 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_HOST=${MARIADB_HOST}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
 
   db:
     build:
       context: .
       dockerfile: Dockerfile.db
     environment:
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     ports:
-      - "${DB_PORT}:3306"
+      - "${MARIADB_PORT}:3306"
     volumes:
       - ./db-data:/var/lib/mysql
       - ./php:/var/www/html
       - ./apache-conf:/etc/apache2/sites-enabled
     command: --group-concat-max-len=4294967295
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
       timeout: 5s
       retries: 3
