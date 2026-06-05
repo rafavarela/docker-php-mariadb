@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y wget nano \
 # Habilitar el módulo rewrite
 RUN a2enmod rewrite
 
+# Copiar configuración de PHP personalizada (límites de upload)
+COPY php.ini /usr/local/etc/php/conf.d/custom.ini
+
 # Copiar entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
